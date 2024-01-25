@@ -1,0 +1,20 @@
+version: "3"
+
+networks:
+  frontend:
+   name: frontend
+   external: true
+   
+services:
+  dozzle:
+    container_name: dozzle
+    image: amir20/dozzle:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /home/martinho/dozzle/certs:/certs
+    #networks:
+    #  - frontend
+    ports:
+      - 9999:8080
+    environment:
+      DOZZLE_REMOTE_HOST: tcp://<<IP>>:2375|dmz

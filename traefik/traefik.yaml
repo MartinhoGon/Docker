@@ -1,0 +1,48 @@
+global:
+  checkNewVersion: true
+  sendAnonymousUsage: false
+log:
+  level: INFO
+  format: common
+  filePath: /traefik.log
+providers:
+  docker:
+    endpoint: 'unix:///var/run/docker.sock'
+    watch: true
+    exposedByDefault: false
+    swarmMode: false
+  file:
+    filename: /config.yml
+    watch: true
+api:
+  dashboard: true
+  debug: true
+  #insecure: false
+entryPoints:
+  http:
+    address: ':80'
+    http:
+      redirections:
+        entryPoint:
+          to: https
+          scheme: https
+          #permanent: true
+  https:
+    address: ':443'
+serversTransport:
+  insecureSkipVerify: true
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: martinhogon@gmail.com
+      storage: /letsencrypt/acme.json
+      dnsChallenge:
+        provider: duckdns
+        resolvers:
+          - "1.1.1.1:53"
+          - "8.8.8.8:53"
+      caServer: 'https://acme-v02.api.letsencrypt.org/directory'
+      #keyType: EC256
+      #httpChallenge:
+      #  entryPoint: http
+      #tlsChallenge: {}

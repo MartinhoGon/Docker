@@ -1,0 +1,11 @@
+version: '3.9'
+services:
+    kavita:
+        image: kizaing/kavita:latest
+        container_name: kavita
+        volumes:
+            - /home/martinho/kavita/books:/books
+            - /home/martinho/kavita/config:/kavita/config
+        ports:
+            - "5000:5000"
+        restart: unless-stopped

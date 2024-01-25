@@ -1,0 +1,34 @@
+version: '3.7'
+services:
+  traefik:
+    image: traefik:latest
+    restart: always
+    networks:
+      - frontend
+    ports:
+      - 80:80
+      - 443:443
+      - 8088:8080
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /home/martinho/traefik/data/traefik.yaml:/traefik.yaml:ro
+      - /home/martinho/traefik/data/confing.yml/:/config.yml
+      - /home/martinho/traefik/data/letsencrypt:/letsencrypt
+      - /home/martinho/traefik/data/traefik.log:/traefik.log
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - DUCKDNS_TOKEN=$DUCK_TOKEN
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=frontend
+      - traefik.http.routers.traefik.tls=true
+      - traefik.http.routers.traefik.tls.certresolver=letsencrypt
+      - traefik.http.routers.traefik.tls.domains[0].main=$URL_API
+      - traefik.http.routers.traefik.tls.domains[0].sans=*.$URL_API
+
+
+
+networks:
+  frontend:
+   name: frontend
+   external: true

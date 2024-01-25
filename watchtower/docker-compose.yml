@@ -1,0 +1,14 @@
+version: "3"
+services:
+  watchtower:
+    container_name: watchtower
+    image: containrrr/watchtower:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /etc/localtime:/etc/localtime:ro
+    restart: always
+    environment:
+      #- DOCKER_HOST="tcp://10.11.12.20:2375"
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_SCHEDULE=0 0 4 * * *
+      #- TZ="Europe/Lisbon"  - substituido pelo volume /etc/localtime

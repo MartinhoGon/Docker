@@ -1,0 +1,30 @@
+http:
+  routers:
+    nextcloud:
+      entrypoints:
+        - "https"
+      rule: "Host('$URL')"
+      middlerwares:
+        - https-redirect
+        - nextcloud-secure-headers
+      tls:
+        domains:
+          - main: "$URL"
+  services:
+    nextcloud:
+      loadBalancer:
+        servers:
+          - url: "https://nextcloud-aio-apache:11000"
+        passHostHeader: true
+  middlewares:
+    https-redirect:
+      redirectScheme:
+        scheme: https
+        permanet: true
+    nextcloud-secure-headers:
+      headers:
+        hostsProxyHeaders:
+          - "X-Forwarded-Host"
+        referrerPolicy: "same-origin"
+        customResponseHeaders:
+          X-Robots-Tag: "none"

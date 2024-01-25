@@ -1,0 +1,16 @@
+version: '3.9'
+
+networks:
+  frontend:
+    name: frontend
+
+services:
+  cloudflaretunnel:
+    container_name: cloudflare-tunnel
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    networks:
+      - frontend
+    environment:
+      - TUNNEL_TOKEN=$TOKEN_CLOUDFLARE
+    command: tunnel --no-autoupdate run

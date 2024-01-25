@@ -1,0 +1,32 @@
+version: '3.9'
+ 
+services:
+    wireguard:
+    image: lscr.io/linuxserver/wireguard:latest
+    container_name: Wireguard
+#   networks:                                 
+#      t2_proxy:                                
+#         ipv4_address: 192.168.2.10          
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - PUID=$PUID
+      - PGID=$PGID
+      - TZ=$TZ
+#      - SERVERURL=<OUR PUBLIC IP>               
+#      - SERVERPORT=51820                       
+#      - PEERS=Profile1,Profile2,OtherProfile       
+#      - PEERDNS=<DNS IP>                        
+#      - INTERNAL_SUBNET=192.168.10.0/24        
+#      - ALLOWEDIPS=0.0.0.0/0                   
+#      - LOG_CONFS=false                          
+    volumes:
+      - $DOCKERDIR/appdata/wireguard:/config
+    ports:
+      - 51820:51820/udp
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+    restart: unless-stopped
+
+
+    # Fonte: https://www.smarthomebeginner.com/wireguard-docker-compose-guide-2023/

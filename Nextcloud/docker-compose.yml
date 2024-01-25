@@ -1,0 +1,39 @@
+services:
+  nextcloud-aio-mastercontainer:
+    image: nextcloud/all-in-one:latest
+    restart: always
+    networks: 
+      - frontend
+    container_name: nextcloud-aio-mastercontainer 
+    volumes:
+      - nextcloud_aio_mastercontainer:/mnt/docker-aio-config 
+      - /var/run/docker.sock:/var/run/docker.sock:ro 
+    ports:
+      #- 80:80 
+      - 8080:8080
+      #- 8443:8443 
+    environment: 
+      - NEXTCLOUD_DATADIR=/mnt/data/nextcloud
+      - SKIP_DOMAIN_VALIDATION=true
+      - APACHE_PORT=11000
+
+    depends_on:
+      - caddy
+
+  caddy:
+    image: caddy:alpine
+    restart: always
+    container_name: caddy
+    volumes:
+      - /home/martinho/caddy/Caddyfile:/etc/caddy/Caddyfile
+      - /home/martinho/caddy/certs:/certs
+      - /home/martinho/caddy/config:/config
+      - /home/martinho/caddy/data:/data
+      - /home/martinho/caddy/sites:/srv
+    network_mode: "host"
+volumes:
+  nextcloud_aio_mastercontainer:
+    name: nextcloud_aio_mastercontainer
+networks:
+  frontend:
+    name: frontend
